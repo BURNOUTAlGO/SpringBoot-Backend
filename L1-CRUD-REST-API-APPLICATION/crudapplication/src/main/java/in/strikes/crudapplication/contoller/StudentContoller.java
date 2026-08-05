@@ -5,9 +5,7 @@ package in.strikes.crudapplication.contoller;
 import in.strikes.crudapplication.entity.Student;
 import in.strikes.crudapplication.service.StudentService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,13 +27,13 @@ public class StudentContoller {
 
     // CREATE STUDENT
     @PostMapping("/create")
-    public ResponseEntity<Student> createStudent(@RequestBody Student student){// request JSON data converted into object
+    public ResponseEntity<Student> createStudent(@RequestBody Student student){// JSON request data converted into object
         Student createdStudent = studentService.createStudent(student);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdStudent);
     }
     // GET STUDENT BY ID
-    @GetMapping("/get/{id}")
-    public ResponseEntity<Student> readAllStudents(@PathVariable Long id){
+    @GetMapping("/get")
+    public ResponseEntity<Student> readAllStudents(@RequestParam Long id){
         Student studentResp = studentService.getStudent(id);
 
         if(studentResp==null){
@@ -54,17 +52,17 @@ public class StudentContoller {
     }
 
     // UPDATE
-    @PutMapping("update/{id}")
-    public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentReq){
+    @PutMapping("update")
+    public ResponseEntity<Student> updateStudent(@RequestParam Long id, @RequestBody Student studentReq){
         Student updatedStudent = studentService.updateStudent(id,studentReq);
         if(updatedStudent==null){
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedStudent);
     }
-
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<String> deleteStudent(@PathVariable Long id){
+    // HARD DELETE
+    @DeleteMapping("delete")
+    public ResponseEntity<String> deleteStudent(@RequestParam Long id){
         Boolean isDeleted = studentService.deleteStudent(id);
         if(!isDeleted){
             return ResponseEntity.notFound().build();
@@ -72,6 +70,16 @@ public class StudentContoller {
         }
         return ResponseEntity.ok("The Record Is Being Deleted");
 
+    }
+
+    // SOFT DELETE
+    @PatchMapping("delete-soft")
+    public ResponseEntity<String> deleteStudentSoftly(@RequestParam Long id){
+        Boolean isDeleted = studentService.deleteStudentSoftly(id);
+        if(!isDeleted) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok("Student Deleted Softly");
     }
 
 

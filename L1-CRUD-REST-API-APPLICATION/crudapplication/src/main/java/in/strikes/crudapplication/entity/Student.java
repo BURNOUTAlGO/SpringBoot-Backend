@@ -2,6 +2,8 @@ package in.strikes.crudapplication.entity;
 
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 //THIS LAYER -
@@ -10,6 +12,7 @@ import jakarta.persistence.Id;
 public class Student {
 
     @Id // ye batati hai ki ye field primary key hai DATABASE MEIN.
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // ye id field user nahi bhejega ye autoincreamant hogi
     private Long id;
 
     private String name ;
@@ -17,6 +20,17 @@ public class Student {
     private int age;
     private int rollNo;
     private String subject;
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    //soft delete field
+    private Boolean deleted;
 
     public String getName() {
         return name;
